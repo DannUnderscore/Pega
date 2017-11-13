@@ -1,0 +1,11 @@
+{
+  "name": "Pega",
+  "version": "0.0.1",
+  "dependencies": {
+    "dnsd": "^0.9.6",
+    "express": "^4.16.2",
+    "ip": "^1.1.5",
+    "socket.io": "^2.0.4",
+    "body-parser": "latest"
+  }
+}
