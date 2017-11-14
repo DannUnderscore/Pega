@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="intro__title">
+    <h1 class="rainbow intro__title__text">
+        -Pega-
+    </h1>
+    <button id="test" class='button button--large hidden clear' onclick="window.minmain();">Test</button>
+    <div class="title__sub">
+        by ReSwitched
+    </div>
+</div>
+
+<script src="socket.io/socket.io.js"></script>
+<script src="js/pega.js"></script>
+<script>
+    function fullscreenify(element) {
+        if (element.requestFullscreen) {
+            element.requestFullscreen();
+        } else if (element.mozRequestFullScreen) {
+            element.mozRequestFullScreen();
+        } else if (element.webkitRequestFullScreen) {
+            element.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+        }
+    }
+
+    window.addEventListener("load", function () {
+        fullscreenify(document.documentElement);
+
+        document.querySelector(".title__sub").onclick = function () {
+            window.location.reload();
+        };
+
+        var debugCount = 0;
+        document.querySelector(".intro__title__text").onclick = function () {
+            fullscreenify(document.documentElement);
+
+            debugCount++;
+            if (debugCount > 2) {
+                var element = document.querySelector("#test");
+                element.classList.remove("hidden");
+                element.classList.add("fadein");
+                element.classList.remove("clear");
+            }
+        }
+    });
+</script>
+</body>
+</html>

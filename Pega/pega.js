@@ -1,6 +1,8 @@
 //Built in modules
 let events = require("events");
 let http = require("http");
+let path = require("path");
+let fs = require("fs");
 
 //External modules
 let dnsd = require("dnsd");
@@ -8,6 +10,9 @@ let ip = require("ip");
 let io = require("socket.io");
 let express = require("express");
 let bodyParser = require("body-parser");
+let morgan = require("morgan");
+let rollup = require("rollup");
+let rollupBabel = require("rollup-plugin-babel");
 
 
 class Pega {
@@ -30,6 +35,35 @@ class Pega {
         //Create an Express application for a nicer web server
         this.expressApplication = express();
         this.expressApplication.use(bodyParser.json());
+        //this.expressApplication.use(morgan("tiny"));
+
+        this.expressApplication.use(express.static(path.join(__dirname, "client")));
+
+        this.expressApplication.get("/js/pega.js", function (req, res) {
+            rollup.rollup({
+                input: path.join(__dirname, "client", "js", "main.js"),
+                plugins: [
+                    rollupBabel({
+                        presets: [["env", {
+                            modules: false
+                        }]],
+                        plugins: ["external-helpers"]
+                    })
+                ]
+            }).then(function (bundle) {
+                bundle.generate({
+                    format: "iife"
+                }).then(function (result) {
+                    res.end(result.code);
+                })
+            })
+        });
+
+        //404 handler
+        this.expressApplication.use(function (req, res) {
+            console.log("404");
+            res.status(404).send("404");
+        });
 
 
         //Create an HTTP server
@@ -37,6 +71,12 @@ class Pega {
 
         //Create a socket server using Socket.IO
         this.socketHandler = io(this.httpServer);
+
+        this.socketHandler.on("connection", function (socket) {
+            socket.on("log", function (message) {
+                console.log(message);
+            })
+        })
     }
 
     //Comfy .on on our main class
@@ -50,6 +90,7 @@ class Pega {
 
         let self = this;
 
+        //Tries to start DNS server
         this.serverPromises.dnsServer = new Promise(function (resolve, reject) {
             self.dnsServer.on("error", function (error) {
                 self.eventEmitter.emit("error", error);
@@ -61,6 +102,7 @@ class Pega {
             })
         });
 
+        //Tries to start HTTP server
         this.serverPromises.httpServer = new Promise(function (resolve, reject) {
             self.httpServer.on("error", function (error) {
                 self.eventEmitter.emit("error", error);
@@ -75,16 +117,13 @@ class Pega {
                     resolve();
                 }
             })
-        })
+        });
 
+        //Executes callback if and when all Promises get resolved
         Promise.all(Object.values(this.serverPromises)).then(function () {
             if (callback)
                 callback();
         })
-    }
-
-    setExploitFolder(folder) {
-        this.expressApplication.use("/", express.static(folder));
     }
 }
 
