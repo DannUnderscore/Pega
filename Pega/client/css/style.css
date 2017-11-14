@@ -86,15 +86,20 @@ html {
     opacity: 0;
 }
 
-#test {
-    float: left;
-    margin-top: -45px;
-}
-
 .fadein {
     -webkit-animation: fadein 2s;
     -o-animation: fadein 2s;
     animation: fadein 2s;
+}
+
+#sidebar {
+    position: absolute;
+    left: -33%;
+    top: 0;
+    width: 33%;
+    height: 100%;
+    opacity: 0;
+    background: rgba(30, 30, 41, 0.85);
 }
 
 @-webkit-keyframes rainbow {

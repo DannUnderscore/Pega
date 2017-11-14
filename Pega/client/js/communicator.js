@@ -6,7 +6,7 @@ class Communicator {
     //Logs messages to the Daemon using socket.io
     log() {
         //Convert arguments object to array to make it more generic and to lose the length argument
-        let argumentArray = Array.prototype.slice.call(arguments).sort();
+        let argumentArray = Array.prototype.slice.call(arguments);
         console.log(argumentArray);
 
         let message = "";

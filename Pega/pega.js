@@ -39,6 +39,7 @@ class Pega {
 
         this.expressApplication.use(express.static(path.join(__dirname, "client")));
 
+        //Transpiles all JS6 to JS5 on the go so the browser will actually accept it
         this.expressApplication.get("/js/pega.js", function (req, res) {
             rollup.rollup({
                 input: path.join(__dirname, "client", "js", "main.js"),
