@@ -75,7 +75,11 @@ class Pega {
 
         this.socketHandler.on("connection", function (socket) {
             socket.on("log", function (message) {
-                console.log(message);
+                self.eventEmitter.emit("log", message);
+            });
+
+            socket.on("jsError", function (error) {
+                self.eventEmitter.emit("jsError", error);
             })
         })
     }

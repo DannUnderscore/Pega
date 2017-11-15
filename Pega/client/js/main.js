@@ -1,27 +1,20 @@
 import {communicator} from "./communicator";
+import {executeExploit} from "./exploit";
+import {setupUI} from "./ui";
 
-let $ = document.querySelector.bind(document);
+setupUI();
 
-window.addEventListener("load", function () {
+setTimeout(function () {
+    communicator.log("Startinn");
+    executeExploit();
+}, 100);
 
-    $(".title__sub").onclick = function () {
-        window.location.reload();
-    };
-
-    let showingMenu = false;
-    $(".intro__title__text").onclick = function () {
-        if (showingMenu) {
-            Velocity($("#sidebar"), {
-                left: "-33%",
-                opacity: 0
-            }, 500);
-        } else {
-            Velocity($("#sidebar"), {
-                left: 0,
-                opacity: 1
-            }, 500);
-        }
-
-        showingMenu = !showingMenu;
-    }
+window.addEventListener("error", function (object) {
+    console.log(object);
+    alert(object.message);
+    communicator.error({
+        message: object.message,
+        url: object.filename,
+        line: object.lineno
+    });
 });

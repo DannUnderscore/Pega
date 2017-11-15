@@ -67,3 +67,12 @@ export function setFullscreen(element) {
         element.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
     }
 }
+
+let __u64tof64_dview;
+export function u64tof64(low, hi) {
+    if (!__u64tof64_dview)
+        __u64tof64_dview = new DataView(new ArrayBuffer(8));
+    __u64tof64_dview.setUint32(0, low, true);
+    __u64tof64_dview.setUint32(4, hi, true);
+    return __u64tof64_dview.getFloat64(0, true);
+}

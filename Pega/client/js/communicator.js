@@ -16,7 +16,13 @@ class Communicator {
                 message += " ";
         }
 
+        //alert(message);
         this.socket.emit("log", message);
+    }
+
+    //Sends errors to the Daemon using socket.io
+    error(err) {
+        this.socket.emit("jsError", err);
     }
 }
 
